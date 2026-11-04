@@ -1,0 +1,40 @@
+# Repo-wide ignores.
+# backend/ (Laravel) and frontend/ (Vite) each get their own .gitignore from their scaffolds
+# for app-specific paths (vendor/, node_modules/, storage/, dist/, ...).
+
+# --- IDEs and editors ---
+.idea/
+.vscode/
+*.code-workspace
+.fleet/
+*.swp
+*~
+
+# --- OS files ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# --- Secrets and local environment ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Dependencies (safety net, in case they're installed at the root) ---
+node_modules/
+vendor/
+
+# --- Logs, caches, coverage ---
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.phpunit.result.cache
+.phpunit.cache/
+coverage/
+
+# --- Local AI and agent settings ---
+.claude/settings.local.json
