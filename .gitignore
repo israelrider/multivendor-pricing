@@ -8,6 +8,7 @@
 *.code-workspace
 .fleet/
 *.swp
+*.iml
 *~
 
 # --- OS files ---

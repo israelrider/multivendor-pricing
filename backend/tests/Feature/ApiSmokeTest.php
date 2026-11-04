@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Pricing\UnpriceableProductException;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class ApiSmokeTest extends TestCase
@@ -18,6 +20,18 @@ class ApiSmokeTest extends TestCase
         $this->getJson('/api/does-not-exist')
             ->assertNotFound()
             ->assertJsonStructure(['message']);
+    }
+
+    public function test_unpriceable_product_returns_json_422(): void
+    {
+        Route::post('/api/test-unpriceable', fn () => throw UnpriceableProductException::unknownProduct(999));
+
+        $this->postJson('/api/test-unpriceable')
+            ->assertUnprocessable()
+            ->assertExactJson([
+                'message' => 'Product 999 does not exist.',
+                'product_id' => 999,
+            ]);
     }
 
     public function test_health_check_is_available(): void
