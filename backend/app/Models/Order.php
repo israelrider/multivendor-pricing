@@ -17,6 +17,9 @@ class Order extends Model
     /** @use HasFactory<OrderFactory> */
     use HasFactory;
 
+    /** What OrderResource reads. Load these before returning an order from the API. */
+    public const array RESOURCE_RELATIONS = ['customer', 'subOrders.vendor', 'subOrders.items'];
+
     protected function casts(): array
     {
         return [

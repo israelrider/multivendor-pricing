@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\QuoteResource;
+use App\Orders\QuoteChangedException;
 use App\Pricing\UnpriceableProductException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -25,4 +27,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'message' => $e->getMessage(),
             'product_id' => $e->productId,
         ], 422));
+
+        // The reviewed total is stale: send the fresh quote so the client can show it right away.
+        $exceptions->render(fn (QuoteChangedException $e, Request $request) => response()->json([
+            'message' => $e->getMessage(),
+            'expected_total_cents' => $e->expectedTotalCents,
+            'quote' => (new QuoteResource($e->quote))->resolve($request),
+        ], 409));
     })->create();
