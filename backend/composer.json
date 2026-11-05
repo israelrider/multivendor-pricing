@@ -7,10 +7,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "ext-pdo_mysql": "*",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0"
     },
     "require-dev": {
+        "ext-pdo_sqlite": "*",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",

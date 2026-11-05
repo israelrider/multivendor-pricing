@@ -1,9 +1,9 @@
 <?php
 
-use App\Discounts\Combiners\BestDiscountWins;
-use App\Discounts\Rules\CategoryDiscountRule;
-use App\Discounts\Rules\LoyaltyCustomerDiscountRule;
-use App\Discounts\Rules\QuantityThresholdDiscountRule;
+use App\Domain\Discounts\Combiners\BestDiscountWins;
+use App\Domain\Discounts\Rules\CategoryDiscountRule;
+use App\Domain\Discounts\Rules\LoyaltyCustomerDiscountRule;
+use App\Domain\Discounts\Rules\QuantityThresholdDiscountRule;
 
 /*
 |--------------------------------------------------------------------------

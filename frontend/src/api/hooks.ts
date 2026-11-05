@@ -10,17 +10,21 @@ export const queryKeys = {
   order: (id: number) => ['orders', id] as const,
 }
 
+// Plain reads don't pass TanStack's abort `signal` to fetch. Without it, a remount (StrictMode in dev,
+// quick navigation) reuses the request in flight instead of aborting it and sending a new one.
+// Only the quote passes the signal, because an outdated quote is worth aborting.
+
 export function useProducts() {
   return useQuery({
     queryKey: queryKeys.products,
-    queryFn: ({ signal }) => api.get<Product[]>('/products', signal),
+    queryFn: () => api.get<Product[]>('/products'),
   })
 }
 
 export function useCustomers() {
   return useQuery({
     queryKey: queryKeys.customers,
-    queryFn: ({ signal }) => api.get<Customer[]>('/customers', signal),
+    queryFn: () => api.get<Customer[]>('/customers'),
     staleTime: Infinity,
   })
 }
@@ -75,7 +79,7 @@ export function hasPendingSubOrders(order: Order): boolean {
 export function useOrder(id: number) {
   return useQuery({
     queryKey: queryKeys.order(id),
-    queryFn: ({ signal }) => api.get<Order>(`/orders/${id}`, signal),
+    queryFn: () => api.get<Order>(`/orders/${id}`),
     refetchInterval: (query) => {
       const order = query.state.data
       if (!order || !hasPendingSubOrders(order)) return false

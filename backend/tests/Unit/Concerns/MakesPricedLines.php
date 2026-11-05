@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Concerns;
 
-use App\Pricing\PricedLine;
-use App\Pricing\PricingContext;
+use App\Domain\Pricing\PricedLine;
+use App\Domain\Pricing\PricingContext;
 
 trait MakesPricedLines
 {

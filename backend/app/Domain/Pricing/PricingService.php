@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Pricing;
+namespace App\Domain\Pricing;
 
-use App\Discounts\DiscountEngine;
+use App\Domain\Discounts\DiscountEngine;
 use App\Models\Customer;
 use App\Models\Product;
 use InvalidArgumentException;

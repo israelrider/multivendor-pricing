@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Discounts;
+namespace App\Domain\Discounts;
 
-use App\Pricing\PricedLine;
-use App\Pricing\PricingContext;
+use App\Domain\Pricing\PricedLine;
+use App\Domain\Pricing\PricingContext;
 
 /**
  * A discount rule. Rules are listed in config/discounts.php, tagged by DiscountServiceProvider

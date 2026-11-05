@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Pricing\Quote;
-use App\Pricing\VendorGroup;
+use App\Domain\Pricing\Quote;
+use App\Domain\Pricing\VendorGroup;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

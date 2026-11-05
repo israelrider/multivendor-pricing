@@ -2,15 +2,15 @@
 
 namespace Tests\Unit\Discounts;
 
-use App\Discounts\Combiners\BestDiscountWins;
-use App\Discounts\Discount;
-use App\Discounts\DiscountEngine;
-use App\Discounts\DiscountRuleInterface;
-use App\Discounts\Rules\CategoryDiscountRule;
-use App\Discounts\Rules\LoyaltyCustomerDiscountRule;
-use App\Discounts\Rules\QuantityThresholdDiscountRule;
-use App\Pricing\PricedLine;
-use App\Pricing\PricingContext;
+use App\Domain\Discounts\Combiners\BestDiscountWins;
+use App\Domain\Discounts\Discount;
+use App\Domain\Discounts\DiscountEngine;
+use App\Domain\Discounts\DiscountRuleInterface;
+use App\Domain\Discounts\Rules\CategoryDiscountRule;
+use App\Domain\Discounts\Rules\LoyaltyCustomerDiscountRule;
+use App\Domain\Discounts\Rules\QuantityThresholdDiscountRule;
+use App\Domain\Pricing\PricedLine;
+use App\Domain\Pricing\PricingContext;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Concerns\MakesPricedLines;
 

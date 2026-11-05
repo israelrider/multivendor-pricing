@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Discounts\Combiners;
+namespace App\Domain\Discounts\Combiners;
 
-use App\Discounts\Discount;
-use App\Discounts\DiscountCombiner;
+use App\Domain\Discounts\Discount;
+use App\Domain\Discounts\DiscountCombiner;
 
 /**
  * The highest percentage wins, with no stacking. On a tie the rule registered first wins,

@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Discounts;
 
-use App\Discounts\Discount;
-use App\Discounts\Rules\CategoryDiscountRule;
-use App\Discounts\Rules\LoyaltyCustomerDiscountRule;
-use App\Discounts\Rules\QuantityThresholdDiscountRule;
+use App\Domain\Discounts\Discount;
+use App\Domain\Discounts\Rules\CategoryDiscountRule;
+use App\Domain\Discounts\Rules\LoyaltyCustomerDiscountRule;
+use App\Domain\Discounts\Rules\QuantityThresholdDiscountRule;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

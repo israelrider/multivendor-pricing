@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pricing;
+namespace App\Domain\Pricing;
 
 /**
  * A priced cart. Lines keep the cart order; vendor groups are ordered by vendor id.

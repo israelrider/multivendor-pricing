@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pricing;
+namespace App\Domain\Pricing;
 
 /**
  * The lines one vendor supplies: what becomes a sub_orders row. Totals are sums of line totals.

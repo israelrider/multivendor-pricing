@@ -4,8 +4,8 @@ namespace App\Http\Resources;
 
 use App\Models\Product;
 use App\Models\ProductOffer;
-use App\Pricing\OfferSelector;
-use App\Pricing\UnpriceableProductException;
+use App\Domain\Pricing\OfferSelector;
+use App\Domain\Pricing\UnpriceableProductException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

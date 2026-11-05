@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\QuoteCartRequest;
 use App\Http\Resources\QuoteResource;
 use App\Models\Customer;
-use App\Pricing\CartItem;
-use App\Pricing\PricingService;
+use App\Domain\Pricing\CartItem;
+use App\Domain\Pricing\PricingService;
 
 /**
  * Prices a cart for the cart and review screens. Persists nothing.

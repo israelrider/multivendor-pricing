@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Orders;
+namespace App\Domain\Orders;
 
 use App\Enums\OrderStatus;
 use App\Enums\SubOrderStatus;
 use App\Jobs\NotifyVendorJob;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Pricing\CartItem;
-use App\Pricing\PricingService;
-use App\Pricing\QuotedLine;
-use App\Pricing\UnpriceableProductException;
+use App\Domain\Pricing\CartItem;
+use App\Domain\Pricing\PricingService;
+use App\Domain\Pricing\QuotedLine;
+use App\Domain\Pricing\UnpriceableProductException;
 use Illuminate\Support\Facades\DB;
 
 /**

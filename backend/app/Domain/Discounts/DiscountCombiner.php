@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Discounts;
+namespace App\Domain\Discounts;
 
 /**
  * The policy that picks which applicable discount is applied to a line.

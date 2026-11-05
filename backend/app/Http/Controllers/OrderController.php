@@ -6,8 +6,8 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Orders\OrderService;
-use App\Pricing\CartItem;
+use App\Domain\Orders\OrderService;
+use App\Domain\Pricing\CartItem;
 use Illuminate\Http\JsonResponse;
 
 class OrderController extends Controller

@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Discounts\Discount;
+use App\Domain\Discounts\Discount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

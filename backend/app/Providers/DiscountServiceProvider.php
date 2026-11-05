@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Discounts\DiscountCombiner;
-use App\Discounts\DiscountEngine;
+use App\Domain\Discounts\DiscountCombiner;
+use App\Domain\Discounts\DiscountEngine;
 use Illuminate\Support\ServiceProvider;
 
 /**

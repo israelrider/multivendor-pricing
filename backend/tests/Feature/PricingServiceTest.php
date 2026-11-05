@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Discounts\Discount;
+use App\Domain\Discounts\Discount;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductOffer;
-use App\Pricing\CartItem;
-use App\Pricing\PricingService;
-use App\Pricing\Quote;
-use App\Pricing\QuotedLine;
-use App\Pricing\UnpriceableProductException;
+use App\Domain\Pricing\CartItem;
+use App\Domain\Pricing\PricingService;
+use App\Domain\Pricing\Quote;
+use App\Domain\Pricing\QuotedLine;
+use App\Domain\Pricing\UnpriceableProductException;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;

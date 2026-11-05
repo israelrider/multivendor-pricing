@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Discounts;
+namespace App\Domain\Discounts;
 
 use InvalidArgumentException;
 

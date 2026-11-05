@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Discounts\Rules;
+namespace App\Domain\Discounts\Rules;
 
-use App\Discounts\Discount;
-use App\Discounts\DiscountRuleInterface;
-use App\Pricing\PricedLine;
-use App\Pricing\PricingContext;
+use App\Domain\Discounts\Discount;
+use App\Domain\Discounts\DiscountRuleInterface;
+use App\Domain\Pricing\PricedLine;
+use App\Domain\Pricing\PricingContext;
 use Illuminate\Container\Attributes\Config;
 use InvalidArgumentException;
 

@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Pricing;
 
-use App\Discounts\Discount;
-use App\Pricing\CartItem;
-use App\Pricing\Quote;
-use App\Pricing\QuotedLine;
+use App\Domain\Discounts\Discount;
+use App\Domain\Pricing\CartItem;
+use App\Domain\Pricing\Quote;
+use App\Domain\Pricing\QuotedLine;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Concerns\MakesPricedLines;

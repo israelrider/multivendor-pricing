@@ -2,10 +2,10 @@
 
 namespace Tests\Fixtures;
 
-use App\Discounts\Discount;
-use App\Discounts\DiscountRuleInterface;
-use App\Pricing\PricedLine;
-use App\Pricing\PricingContext;
+use App\Domain\Discounts\Discount;
+use App\Domain\Discounts\DiscountRuleInterface;
+use App\Domain\Pricing\PricedLine;
+use App\Domain\Pricing\PricingContext;
 
 /**
  * A rule that exists only in tests, to prove a new rule needs no change to the engine or services.

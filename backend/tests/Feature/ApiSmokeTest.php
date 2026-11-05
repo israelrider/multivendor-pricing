@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Pricing\UnpriceableProductException;
+use App\Domain\Pricing\UnpriceableProductException;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 

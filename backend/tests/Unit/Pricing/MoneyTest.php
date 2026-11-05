@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Pricing;
 
-use App\Pricing\Money;
+use App\Domain\Pricing\Money;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

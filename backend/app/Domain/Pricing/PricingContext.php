@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Pricing;
+namespace App\Domain\Pricing;
 
 use App\Models\Customer;
 

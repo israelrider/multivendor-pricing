@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Discounts\Combiners\BestDiscountWins;
-use App\Discounts\Discount;
-use App\Discounts\DiscountCombiner;
-use App\Discounts\DiscountEngine;
+use App\Domain\Discounts\Combiners\BestDiscountWins;
+use App\Domain\Discounts\Discount;
+use App\Domain\Discounts\DiscountCombiner;
+use App\Domain\Discounts\DiscountEngine;
 use App\Providers\DiscountServiceProvider;
 use Tests\Fixtures\FlashSaleDiscountRule;
 use Tests\TestCase;

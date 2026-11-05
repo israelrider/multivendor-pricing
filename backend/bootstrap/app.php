@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Resources\QuoteResource;
-use App\Orders\QuoteChangedException;
-use App\Pricing\UnpriceableProductException;
+use App\Domain\Orders\QuoteChangedException;
+use App\Domain\Pricing\UnpriceableProductException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;

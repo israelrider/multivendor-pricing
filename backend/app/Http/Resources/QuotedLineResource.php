@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Discounts\Discount;
-use App\Pricing\QuotedLine;
+use App\Domain\Discounts\Discount;
+use App\Domain\Pricing\QuotedLine;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

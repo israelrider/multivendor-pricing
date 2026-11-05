@@ -4,8 +4,8 @@ namespace Tests\Unit\Pricing;
 
 use App\Models\Product;
 use App\Models\ProductOffer;
-use App\Pricing\OfferSelector;
-use App\Pricing\UnpriceableProductException;
+use App\Domain\Pricing\OfferSelector;
+use App\Domain\Pricing\UnpriceableProductException;
 use PHPUnit\Framework\TestCase;
 
 class OfferSelectorTest extends TestCase

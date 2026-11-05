@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Orders;
+namespace App\Domain\Orders;
 
-use App\Pricing\Quote;
+use App\Domain\Pricing\Quote;
 use RuntimeException;
 
 /**

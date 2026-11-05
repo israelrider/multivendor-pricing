@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Pricing;
+namespace App\Domain\Pricing;
 
-use App\Discounts\Discount;
+use App\Domain\Discounts\Discount;
 
 /**
  * A fully priced line: the offer, every applicable discount, the applied one and the resulting cents.
