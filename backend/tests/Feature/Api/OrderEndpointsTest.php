@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Api;
 
+use App\Domain\Orders\OrderService;
+use App\Domain\Orders\QuoteChangedException;
+use App\Domain\Pricing\CartItem;
 use App\Enums\OrderStatus;
 use App\Enums\SubOrderStatus;
 use App\Http\Requests\StoreOrderRequest;
@@ -13,7 +16,10 @@ use App\Models\Product;
 use App\Models\ProductOffer;
 use App\Models\SubOrder;
 use Database\Seeders\DatabaseSeeder;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Queue;
 use RuntimeException;
 use Tests\TestCase;
@@ -224,5 +230,156 @@ class OrderEndpointsTest extends TestCase
         $this->getJson("/api/orders/{$id}")
             ->assertJsonPath('data.status', OrderStatus::Notified->value)
             ->assertJsonPath('data.sub_orders.*.status', [SubOrderStatus::Notified->value, SubOrderStatus::Notified->value]);
+    }
+
+    public function test_expected_business_errors_are_not_reported_to_the_log(): void
+    {
+        Queue::fake();
+        Exceptions::fake();
+        ProductOffer::whereRelation('product', 'sku', 'BOOK-002')->update(['price_cents' => 4_299]);
+
+        $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => 11_062]))->assertConflict();
+
+        Exceptions::assertNotReported(QuoteChangedException::class);
+    }
+
+    // --- Idempotency-Key -----------------------------------------------------------------------------
+
+    public function test_the_same_idempotency_key_twice_creates_one_order_and_notifies_each_vendor_once(): void
+    {
+        Queue::fake();
+        $headers = ['Idempotency-Key' => 'checkout-7f3c'];
+
+        $first = $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => 11_062]), $headers)
+            ->assertCreated()
+            ->assertHeaderMissing('Idempotent-Replayed');
+
+        $second = $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => 11_062]), $headers)
+            ->assertOk()
+            ->assertHeader('Idempotent-Replayed', 'true')
+            ->assertJsonPath('data.total_cents', 11_062)
+            ->assertJsonCount(2, 'data.sub_orders');
+
+        $this->assertSame($first->json('data.id'), $second->json('data.id'));
+        $this->assertSame(1, Order::count());
+        $this->assertSame(2, SubOrder::count());
+        Queue::assertPushed(NotifyVendorJob::class, 2);
+    }
+
+    public function test_a_replay_returns_the_stored_order_even_if_prices_changed_since(): void
+    {
+        Queue::fake();
+        $headers = ['Idempotency-Key' => 'checkout-7f3c'];
+        $id = $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => 11_062]), $headers)->json('data.id');
+
+        ProductOffer::whereRelation('product', 'sku', 'BOOK-002')->update(['price_cents' => 4_299]);
+
+        // No 409: the order already exists, so its stored prices are the answer.
+        $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => 11_062]), $headers)
+            ->assertOk()
+            ->assertJsonPath('data.id', $id)
+            ->assertJsonPath('data.total_cents', 11_062);
+    }
+
+    public function test_different_idempotency_keys_create_separate_orders(): void
+    {
+        Queue::fake();
+
+        $this->postJson('/api/orders', $this->twoVendorCart(), ['Idempotency-Key' => 'checkout-1'])->assertCreated();
+        $this->postJson('/api/orders', $this->twoVendorCart(), ['Idempotency-Key' => 'checkout-2'])->assertCreated();
+
+        $this->assertSame(2, Order::count());
+    }
+
+    public function test_a_key_reused_for_a_different_cart_is_rejected(): void
+    {
+        Queue::fake();
+        $headers = ['Idempotency-Key' => 'checkout-7f3c'];
+        $this->postJson('/api/orders', $this->twoVendorCart(), $headers)->assertCreated();
+
+        $changed = $this->twoVendorCart();
+        $changed['items'][0]['quantity'] = 3;
+
+        $this->postJson('/api/orders', $changed, $headers)
+            ->assertUnprocessable()
+            ->assertJsonStructure(['message']);
+
+        $this->assertSame(1, Order::count());
+        Queue::assertPushed(NotifyVendorJob::class, 2);
+    }
+
+    public function test_a_key_reused_by_another_customer_is_rejected(): void
+    {
+        Queue::fake();
+        $headers = ['Idempotency-Key' => 'checkout-7f3c'];
+        $this->postJson('/api/orders', $this->twoVendorCart(), $headers)->assertCreated();
+
+        $other = $this->twoVendorCart(['customer_id' => Customer::where('email', '!=', 'alex@example.com')->value('id')]);
+
+        $this->postJson('/api/orders', $other, $headers)->assertUnprocessable();
+        $this->assertSame(1, Order::count());
+    }
+
+    public function test_a_409_does_not_use_up_the_key(): void
+    {
+        Queue::fake();
+        $headers = ['Idempotency-Key' => 'checkout-7f3c'];
+        ProductOffer::whereRelation('product', 'sku', 'BOOK-002')
+            ->whereRelation('vendor', 'name', 'Brightline Traders')
+            ->update(['price_cents' => 4_299]);
+
+        $fresh = $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => 11_062]), $headers)
+            ->assertConflict()
+            ->json('quote.total_cents');
+
+        // The customer confirms the new total; the same checkout (and key) now goes through.
+        $this->postJson('/api/orders', $this->twoVendorCart(['expected_total_cents' => $fresh]), $headers)->assertCreated();
+        $this->assertSame(1, Order::count());
+    }
+
+    public function test_a_concurrent_request_that_loses_the_race_returns_the_winners_order(): void
+    {
+        Queue::fake();
+        $payload = $this->twoVendorCart();
+        $headers = ['Idempotency-Key' => 'checkout-race'];
+
+        // Simulate a parallel request: right after this request's lookup finds no order for the key,
+        // the "other" request commits one, so this request's insert hits the unique index.
+        $winnerId = null;
+        DB::listen(function (QueryExecuted $query) use (&$winnerId, $payload, $headers) {
+            if ($winnerId !== null || ! str_contains($query->sql, 'idempotency_key')) {
+                return;
+            }
+            $winnerId = 0; // guard against re-entry from the queries below
+            $winnerId = app(OrderService::class)->place(
+                Customer::findOrFail($payload['customer_id']),
+                CartItem::listFrom($payload['items']),
+                idempotencyKey: $headers['Idempotency-Key'],
+            )->id;
+        });
+
+        $this->postJson('/api/orders', $payload, $headers)
+            ->assertOk()
+            ->assertHeader('Idempotent-Replayed', 'true')
+            ->assertJsonPath('data.id', $winnerId);
+
+        $this->assertSame(1, Order::count());
+        $this->assertSame(2, SubOrder::count());
+        Queue::assertPushed(NotifyVendorJob::class, 2);
+    }
+
+    public function test_an_invalid_idempotency_key_is_a_validation_error(): void
+    {
+        Queue::fake();
+
+        $this->postJson('/api/orders', $this->twoVendorCart(), ['Idempotency-Key' => 'has spaces'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['idempotency_key']);
+
+        $this->postJson('/api/orders', $this->twoVendorCart(), ['Idempotency-Key' => str_repeat('k', 101)])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['idempotency_key']);
+
+        $this->assertSame(0, Order::count());
     }
 }

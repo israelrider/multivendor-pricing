@@ -44,7 +44,7 @@ export function useQuote(customerId: number | null, items: CartItemInput[]) {
   const query = useQuery({
     queryKey: queryKeys.quote(customerId ?? 0, debouncedItems),
     queryFn: ({ signal }) =>
-      api.post<Quote>('/cart/quote', { customer_id: customerId, items: debouncedItems }, signal),
+      api.post<Quote>('/cart/quote', { customer_id: customerId, items: debouncedItems }, { signal }),
     enabled: customerId !== null && debouncedItems.length > 0,
     placeholderData: keepPreviousData,
   })
@@ -56,11 +56,16 @@ export function useQuote(customerId: number | null, items: CartItemInput[]) {
   }
 }
 
+/**
+ * Places an order. The idempotency key goes in the `Idempotency-Key` header: sending the same key and
+ * cart again returns the order already placed (HTTP 200) instead of creating a second one.
+ */
 export function useCreateOrder() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (input: OrderRequest) => api.post<Order>('/orders', input),
+    mutationFn: ({ order, idempotencyKey }: { order: OrderRequest; idempotencyKey: string }) =>
+      api.post<Order>('/orders', order, { headers: { 'Idempotency-Key': idempotencyKey } }),
     onSuccess: (order) => {
       queryClient.setQueryData(queryKeys.order(order.id), order)
     },

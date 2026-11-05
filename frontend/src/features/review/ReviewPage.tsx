@@ -5,6 +5,7 @@ import { queryKeys, useCreateOrder, useQuote } from '../../api/hooks'
 import type { QuotedLine, VendorGroup } from '../../api/types'
 import { Badge, Button, Card, ErrorBanner, Money, PageHeader, Skeleton, Spinner, TotalsList } from '../../components/ui'
 import { formatCents } from '../../lib/format'
+import { useIdempotencyKey } from '../../lib/useIdempotencyKey'
 import { useCart } from '../cart/CartContext'
 import { DiscountInfo } from '../cart/DiscountInfo'
 import { lineErrorsFrom } from '../cart/quoteErrors'
@@ -16,6 +17,7 @@ export function ReviewPage() {
   const customer = useCustomer()
   const quote = useQuote(customer.customerId, cart.items)
   const createOrder = useCreateOrder()
+  const idempotencyKeyFor = useIdempotencyKey()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -39,8 +41,14 @@ export function ReviewPage() {
     const items = cart.items
 
     createOrder.mutate(
-      // The reviewed total goes along, so the server refuses (409) if prices moved meanwhile.
-      { customer_id: customerId, items, expected_total_cents: quote.data.total_cents },
+      {
+        // The reviewed total goes along, so the server refuses (409) if prices moved meanwhile.
+        order: { customer_id: customerId, items, expected_total_cents: quote.data.total_cents },
+        // Same customer and cart → same key. A double click or a retry can't place a second order:
+        // the server answers with the order this key already created. isPending alone can't prevent
+        // that, because a second click can land before React re-renders the disabled button.
+        idempotencyKey: idempotencyKeyFor({ customerId, items }),
+      },
       {
         onSuccess: (order) => {
           navigate(`/orders/${order.id}`)

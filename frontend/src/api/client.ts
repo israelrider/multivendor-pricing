@@ -102,8 +102,10 @@ function toError(status: number, body: ErrorBody | null): ApiError {
   return new ApiError(message, status)
 }
 
+type RequestInit = { method?: string; body?: unknown; headers?: Record<string, string>; signal?: AbortSignal }
+
 /** Fetches `/api{path}` and returns the resource's `data`. */
-async function request<T>(path: string, init?: { method?: string; body?: unknown; signal?: AbortSignal }): Promise<T> {
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response
   try {
     response = await fetch(`/api${path}`, {
@@ -111,6 +113,7 @@ async function request<T>(path: string, init?: { method?: string; body?: unknown
       headers: {
         Accept: 'application/json',
         ...(init?.body !== undefined && { 'Content-Type': 'application/json' }),
+        ...init?.headers,
       },
       body: init?.body === undefined ? undefined : JSON.stringify(init.body),
       signal: init?.signal,
@@ -130,5 +133,6 @@ async function request<T>(path: string, init?: { method?: string; body?: unknown
 
 export const api = {
   get: <T>(path: string, signal?: AbortSignal) => request<T>(path, { signal }),
-  post: <T>(path: string, body: unknown, signal?: AbortSignal) => request<T>(path, { method: 'POST', body, signal }),
+  post: <T>(path: string, body: unknown, options?: { headers?: Record<string, string>; signal?: AbortSignal }) =>
+    request<T>(path, { method: 'POST', body, ...options }),
 }

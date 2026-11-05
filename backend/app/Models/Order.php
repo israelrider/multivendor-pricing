@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-#[Fillable(['customer_id', 'status', 'subtotal_cents', 'discount_cents', 'total_cents'])]
+#[Fillable(['customer_id', 'idempotency_key', 'idempotency_request_hash', 'status', 'subtotal_cents', 'discount_cents', 'total_cents'])]
 class Order extends Model
 {
     /** @use HasFactory<OrderFactory> */

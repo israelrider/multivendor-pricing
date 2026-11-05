@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { UnpriceableProductError, ValidationError } from '../../api/client'
 import { useQuote } from '../../api/hooks'
@@ -192,6 +193,11 @@ function CartLineRow({
 }
 
 function QuantityStepper({ label, quantity, onChange }: { label: string; quantity: number; onChange: (quantity: number) => void }) {
+  // What the box shows while the user is typing. It may be empty or not a valid quantity yet ("", "-"),
+  // so it can't live in the cart. Valid numbers go to the cart at once; leaving the box drops the draft,
+  // and the box shows the cart's quantity again.
+  const [draft, setDraft] = useState<string | null>(null)
+
   const buttonClass =
     'grid size-8 place-items-center text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40'
 
@@ -211,10 +217,16 @@ function QuantityStepper({ label, quantity, onChange }: { label: string; quantit
         inputMode="numeric"
         min={1}
         max={MAX_QUANTITY}
-        value={quantity}
-        onChange={(event) => onChange(event.target.valueAsNumber)}
+        value={draft ?? quantity}
+        onChange={(event) => {
+          setDraft(event.target.value)
+          const typed = event.target.valueAsNumber
+          if (Number.isFinite(typed) && typed >= 1) onChange(typed)
+        }}
+        onBlur={() => setDraft(null)}
         aria-label={`Quantity of ${label}`}
-        className="h-8 w-12 border-x border-slate-300 text-center text-sm tabular-nums [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none"
+        // The ring is drawn inside the box (negative offset): the stepper's overflow-hidden would clip one outside it.
+        className="h-8 w-12 border-x border-slate-300 text-center text-sm tabular-nums [appearance:textfield] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 [&::-webkit-inner-spin-button]:appearance-none"
       />
       <button
         type="button"
