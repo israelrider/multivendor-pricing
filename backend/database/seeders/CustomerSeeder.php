@@ -6,7 +6,7 @@ use App\Models\Customer;
 use Illuminate\Database\Seeder;
 
 /**
- * Demo customers to "act as" (there is no auth, see README section 9).
+ * Demo customers to "act as" (there is no auth, see README, "Assumptions").
  * One is loyal, so the loyalty discount can be shown.
  */
 class CustomerSeeder extends Seeder

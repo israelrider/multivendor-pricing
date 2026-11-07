@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
  * An order is split into one sub-order per vendor. Order items belong to a sub-order and snapshot
  * the product name, unit price and applied discount, so later catalog changes never rewrite history.
  *
- * Totals are always sums of line totals: order = Σ sub_order = Σ item (README section 3).
+ * Totals are always sums of line totals: order = Σ sub_order = Σ item (README, "Domain model").
  */
 return new class extends Migration
 {

@@ -11,7 +11,7 @@ use Illuminate\Database\Seeder;
 /**
  * Fixed demo catalog: 3 vendors, 4 categories, 10 products.
  *
- * The data is chosen to exercise the pricing rules (README section 4.1), not random:
+ * The data is chosen to exercise the pricing rules, not random:
  *   - most products have overlapping offers, so the cheapest vendor differs per product;
  *   - ELEC-002 is a price tie between Acme and Corner, so the lowest vendor id (Acme) must win;
  *   - HOME-003 has a cheaper offer that is inactive, which must be ignored;

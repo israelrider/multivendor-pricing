@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 import type { Customer } from '../../api/types'
 
 /**
- * Who the shop is "acting as". There's no auth (README section 9), so the customer is picked
+ * Who the shop is "acting as". There's no auth (README, "Assumptions"), so the customer is picked
  * from the seeded demo customers. It's global because the quote depends on it: loyal customers
  * get the loyalty discount already in the cart.
  */

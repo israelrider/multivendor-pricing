@@ -3,7 +3,7 @@ import { Badge } from '../../components/ui'
 
 /**
  * The applied discount as a badge, plus the other discounts the line also qualifies for.
- * Only the best one applies (ADR 0002), and showing the rest explains why.
+ * Only the best one applies, and showing the rest explains why.
  */
 export function DiscountInfo({ line }: { line: QuotedLine }) {
   const alsoEligible = line.applicable_discounts.filter((discount) => !discount.applied)

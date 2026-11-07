@@ -4,7 +4,6 @@ namespace App\Domain\Discounts;
 
 /**
  * The policy that picks which applicable discount is applied to a line.
- * See docs/decisions/0002-discount-combining-best-wins.md.
  */
 interface DiscountCombiner
 {

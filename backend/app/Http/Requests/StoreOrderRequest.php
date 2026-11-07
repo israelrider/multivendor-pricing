@@ -4,10 +4,10 @@ namespace App\Http\Requests;
 
 /**
  * The same cart as a quote, plus the total the customer saw on the review screen.
- * If it no longer matches the server's price the API answers 409 (README section 5).
+ * If it no longer matches the server's price the API answers 409.
  *
  * The optional `Idempotency-Key` header is validated here too, under the `idempotency_key` key,
- * so a bad key gets the usual 422 shape. Same key and same cart → the same order (README section 5).
+ * so a bad key gets the usual 422 shape. Same key and same cart → the same order.
  */
 class StoreOrderRequest extends QuoteCartRequest
 {

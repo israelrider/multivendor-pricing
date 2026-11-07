@@ -6,7 +6,7 @@ import { OrderPage } from './features/order/OrderPage'
 import { ProductsPage } from './features/products/ProductsPage'
 import { ReviewPage } from './features/review/ReviewPage'
 
-// Products → Cart → Review → Result (README section 7).
+// Products → Cart → Review → Result (README, "Frontend flow").
 export default function App() {
   return (
     <Routes>

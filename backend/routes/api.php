@@ -6,7 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-// All routes here are prefixed with /api (see bootstrap/app.php). README section 6 lists them.
+// All routes here are prefixed with /api (see bootstrap/app.php). The README "API" section lists them.
 
 Route::get('/ping', fn () => ['status' => 'ok']);
 

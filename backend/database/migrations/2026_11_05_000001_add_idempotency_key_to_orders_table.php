@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * An order remembers the Idempotency-Key it was placed with, so a double submit or a retry
- * returns the same order instead of creating a second one (README section 5).
+ * returns the same order instead of creating a second one.
  *
  * The unique index is what makes this safe under concurrency: when two requests with the same key
  * race, the database lets exactly one insert through. The request hash detects a key reused for a

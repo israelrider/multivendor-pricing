@@ -10,7 +10,7 @@ use Illuminate\Container\Attributes\Config;
 
 /**
  * The customer is flagged as loyal. It's a customer-level fact, but it is evaluated per line like
- * every rule, so the discount lands in the right vendor sub-order (ADR 0002, section 2).
+ * every rule, so the discount lands in the right vendor sub-order.
  */
 final class LoyaltyCustomerDiscountRule implements DiscountRuleInterface
 {

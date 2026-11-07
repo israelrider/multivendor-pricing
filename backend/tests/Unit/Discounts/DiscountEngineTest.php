@@ -98,8 +98,8 @@ class DiscountEngineTest extends TestCase
         $this->assertSame('gen', $result->applied->rule);
     }
 
-    /** The worked example from ADR 0002: loyal customer, 10 electronics items. */
-    public function test_the_adr_worked_example(): void
+    /** The worked example: loyal customer, 10 electronics items. */
+    public function test_a_loyal_customer_buying_ten_electronics_items(): void
     {
         $engine = $this->engine(
             new QuantityThresholdDiscountRule([5 => 500, 10 => 1000]),

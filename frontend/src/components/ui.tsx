@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react'
 import { formatCents } from '../lib/format'
 
-// Small in-house building blocks (README section 7). Neutral slate palette, one indigo accent.
+// Small in-house building blocks (README, "Frontend flow"). Neutral slate palette, one indigo accent.
 
 function cx(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(' ')

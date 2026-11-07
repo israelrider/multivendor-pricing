@@ -7,7 +7,7 @@ use App\Models\Customer;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
- * The demo customers a visitor can act as. There is no auth (README section 9).
+ * The demo customers a visitor can act as. There is no auth (README, "Assumptions").
  */
 class CustomerController extends Controller
 {

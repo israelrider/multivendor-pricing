@@ -15,7 +15,6 @@ use App\Domain\Discounts\Rules\QuantityThresholdDiscountRule;
 | The order matters only for ties: with equal percentages the rule listed first is applied.
 |
 | All percentages are integer basis points: 100 bps = 1%, 1000 bps = 10%.
-| See docs/decisions/0002-discount-combining-best-wins.md.
 |
 */
 

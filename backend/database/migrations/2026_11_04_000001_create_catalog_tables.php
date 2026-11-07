@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
  * Customers, vendors and the product catalog.
  *
  * A product has no price of its own: every vendor that sells it has an offer with its own price.
- * Money is stored as integer cents (see README section 4.4).
+ * Money is stored as integer cents.
  */
 return new class extends Migration
 {
