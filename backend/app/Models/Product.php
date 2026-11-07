@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * A product has no price of its own. Each vendor selling it has a ProductOffer.
- * Choosing which offer to use belongs to the OfferSelector (step 3), not to the model.
+ * Choosing which offer to use belongs to the OfferSelector, not to the model.
  */
 #[Fillable(['category_id', 'name', 'sku'])]
 class Product extends Model

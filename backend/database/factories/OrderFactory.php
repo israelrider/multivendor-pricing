@@ -8,7 +8,7 @@ use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * Creates an empty order header. Real orders are built by OrderService (step 4), which
+ * Creates an empty order header. Real orders are built by OrderService, which
  * derives the totals from the line items. Tests that need totals set them explicitly.
  *
  * @extends Factory<Order>
