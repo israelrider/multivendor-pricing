@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * The slug is the stable key that the discount config refers to (config/discounts.php, step 3).
+ * The slug is the stable key that the discount config refers to (config/discounts.php).
  */
 #[Fillable(['name', 'slug'])]
 class Category extends Model

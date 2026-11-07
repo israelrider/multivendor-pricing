@@ -83,12 +83,29 @@ Books get 5%. Loyal customers get 3%. The single best discount applies to each l
 
 ---
 
-### Four things to emphasize:
+### Where each requirement lives
+
+Paths are under `backend/` and `frontend/src/`.
+
+| Requirement | Implementation | Tests |
+|-------------|----------------|-------|
+| Accept a cart, lowest price per product | `POST /api/cart/quote`, `POST /api/orders`; `Domain/Pricing/OfferSelector`, `PricingService` | `Unit/Pricing/OfferSelectorTest`, `Feature/PricingServiceTest` |
+| Apply discount rules dynamically | `Domain/Discounts/DiscountEngine`, `Rules/*` (quantity, category, loyalty) | `Unit/Discounts/*`, `Feature/Api/CartQuoteTest` |
+| `DiscountRuleInterface`, `CategoryDiscountRule`, `LoyaltyCustomerDiscountRule` | `Domain/Discounts/` | `Unit/Discounts/DiscountRulesTest` |
+| Bind the rules and resolve them dynamically | `Providers/DiscountServiceProvider` (container tag) + `config/discounts.php` | `Feature/DiscountWiringTest` |
+| One order, sub-orders grouped by vendor | `Domain/Orders/OrderService` (one DB transaction) | `Feature/Api/OrderEndpointsTest` |
+| `NotifyVendorJob` per sub-order, logged to `laravel.log` | `Jobs/NotifyVendorJob`, dispatched after commit | `Feature/Api/OrderEndpointsTest`, `Feature/NotifyVendorJobTest` |
+| Frontend: products, cart, vendor/price/discounts, review, submit, result | `features/{products,cart,review,order}/` | Checked by hand with the walkthrough above |
+
+---
+
+### Design highlights
 
 1. **The discount engine.** "Bind the discount rules and resolve them dynamically" and "without significantly
    changing the main order-processing logic" describe the Strategy pattern, with rules registered in the
-   service container. Adding a rule should take **one new class and one config line**.
-2. **Correct money handling.** This is a payments-adjacent company, so there are no floats anywhere and rounding is predictable.
+   service container. Adding a rule takes **one new class and one config line** (a test proves it).
+2. **Correct money handling.** All amounts are integer cents and percentages are basis points, so there are no floats
+   anywhere and rounding is predictable.
 3. **Transactional integrity.** The order and its sub-orders are created atomically. Vendor jobs are dispatched **only after
    commit**, so a job never runs for an order that was rolled back.
 4. **Structure and tests.** That means thin controllers, a service layer, Form Requests, API Resources, and real tests.
@@ -243,10 +260,9 @@ The backend also includes: `StoreOrderRequest`/`QuoteCartRequest` (items 1–50,
 
 #### Decisions
 
-- **Git:** the project has its own repository, initialized in `multivendor-pricing/`.
 - **Tests:** PHPUnit.
 - **Database:** MySQL for the app, in-memory SQLite for tests.
 - **Discounts:** best single discount wins per line.
 - **Duplicate orders:** prevented on the server with an `Idempotency-Key`.
 - **Styling:** Tailwind CSS v4.
-- **Docker and Composer scripts:** deferred For now the project runs with plain artisan commands.
+- **Docker and Composer scripts:** deferred. For now the project runs with plain artisan commands.
